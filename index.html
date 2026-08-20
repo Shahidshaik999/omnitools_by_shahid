@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>OmniTools — 100% Free & Private Online PDF, Image, QR & Utility Suite</title>
+  <meta name="title" content="OmniTools — 100% Free & Private Online PDF, Image, QR & Utility Suite">
+  <meta name="description" content="All-in-one private browser utilities: Convert PDF to Word, merge & split PDFs, compress images, generate Wi-Fi QR codes, compare text diffs, and generate secure passwords. 100% client-side with zero server uploads.">
+  <meta name="keywords" content="pdf to word converter, merge pdf, split pdf, image compressor, format converter, qr code generator, wifi qr code, diff checker, password generator, text case converter, unit converter, private pdf tools, offline utilities">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="author" content="OmniTools">
+
+  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://omnitools.dev/">
+  <meta property="og:title" content="OmniTools — Daily Digital Swiss-Army Knife">
+  <meta property="og:description" content="19+ fast, 100% private tools for documents, images, and daily coding tasks. Zero file uploads, zero limits.">
+  <meta property="og:site_name" content="OmniTools">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://omnitools.dev/">
+  <meta name="twitter:title" content="OmniTools — Daily Digital Swiss-Army Knife">
+  <meta name="twitter:description" content="19+ fast, 100% private tools for documents, images, and daily coding tasks. Zero file uploads, zero limits.">
+
+  <!-- Mobile & PWA Configuration -->
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/></svg>">
+
+  <!-- Structured Data: Google Rich Snippet & FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "OmniTools",
+        "url": "https://omnitools.dev/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "PDF to Word (.docx) Converter",
+          "Merge and Split PDF Documents",
+          "Sign & Annotate PDF in Browser",
+          "Smart Image Compressor with Live Preview",
+          "Universal Image Format Converter",
+          "Document Photo Scan Enhancer",
+          "Custom Styled Wi-Fi & vCard QR Code Generator",
+          "QR Code Scanner from Camera and Image",
+          "Password & Diceware Passphrase Generator",
+          "Text & Code Diff Visual Comparator",
+          "Unix Timestamp & Date Duration Calculator",
+          "Markdown Scratchpad with Local Auto-Save",
+          "Regular Expression Match Tester",
+          "Multi-Unit and Metric Converter"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is OmniTools free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, OmniTools is 100% free with no file size limits, no subscription fees, and no account registration required."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are my files uploaded or stored on any server?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. OmniTools is 100% client-side. All processing happens entirely within your web browser using WebAssembly, Canvas, and pure JavaScript. Your files never leave your computer or phone."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does OmniTools work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, all core utilities including QR generation, password creation, diff checking, image compression, and text conversions work without an active internet connection."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- External Libraries (Client-side, privacy-first) -->
+  <!-- PDF-Lib for merging, splitting, creating & signing PDFs -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- PDF.js for rendering and text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <!-- JSZip for batch downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- jsQR for QR Code scanning -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <!-- docx for generating .docx files -->
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/tools.css">
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">
+            <i data-lucide="wrench"></i>
+          </div>
+          <div class="logo-text">
+            <span class="brand-name">OmniTools</span>
+            <span class="brand-badge">PRO SUITE</span>
+          </div>
+        </div>
+        <button class="icon-btn mobile-close-btn" id="closeSidebarBtn" aria-label="Close Sidebar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-search">
+        <button class="search-trigger-btn" id="openCommandPaletteBtn">
+          <i data-lucide="search"></i>
+          <span>Search tools...</span>
+          <kbd class="shortcut-tag">Ctrl K</kbd>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Quick Section -->
+        <div class="nav-section-title">OVERVIEW</div>
+        <button class="nav-item active" data-view="dashboard">
+          <i data-lucide="layout-grid"></i>
+          <span>All Utilities</span>
+        </button>
+        <button class="nav-item" data-view="favorites">
+          <i data-lucide="star"></i>
+          <span>Favorites</span>
+          <span class="counter-badge" id="favoritesCount">0</span>
+        </button>
+
+        <!-- Document & PDF Category -->
+        <div class="nav-section-title">DOCUMENT & PDF</div>
+        <button class="nav-item" data-view="pdf-to-word">
+          <i data-lucide="file-text"></i>
+          <span>PDF to Word (.docx)</span>
+        </button>
+        <button class="nav-item" data-view="pdf-merge">
+          <i data-lucide="files"></i>
+          <span>Merge PDFs</span>
+        </button>
+        <button class="nav-item" data-view="pdf-split">
+          <i data-lucide="scissors"></i>
+          <span>Split / Extract PDF</span>
+        </button>
+        <button class="nav-item" data-view="images-to-pdf">
+          <i data-lucide="file-plus"></i>
+          <span>Images to PDF</span>
+        </button>
+        <button class="nav-item" data-view="pdf-to-images">
+          <i data-lucide="image-down"></i>
+          <span>PDF to Images</span>
+        </button>
+        <button class="nav-item" data-view="pdf-signer">
+          <i data-lucide="signature"></i>
+          <span>Sign & Annotate PDF</span>
+        </button>
+
+        <!-- Media & Image Category -->
+        <div class="nav-section-title">MEDIA & IMAGE</div>
+        <button class="nav-item" data-view="image-compress">
+          <i data-lucide="minimize-2"></i>
+          <span>Image Compressor</span>
+        </button>
+        <button class="nav-item" data-view="image-convert">
+          <i data-lucide="refresh-cw"></i>
+          <span>Format Converter</span>
+        </button>
+        <button class="nav-item" data-view="doc-scanner">
+          <i data-lucide="scan-line"></i>
+          <span>Document Scan Filter</span>
+        </button>
+        <button class="nav-item" data-view="color-palette">
+          <i data-lucide="pipette"></i>
+          <span>Color & Palette Picker</span>
+        </button>
+
+        <!-- QR & Barcodes -->
+        <div class="nav-section-title">QR STUDIO</div>
+        <button class="nav-item" data-view="qr-generator">
+          <i data-lucide="qr-code"></i>
+          <span>QR Code Generator</span>
+        </button>
+        <button class="nav-item" data-view="qr-scanner">
+          <i data-lucide="scan"></i>
+          <span>QR Code Scanner</span>
+        </button>
+
+        <!-- Text & Data -->
+        <div class="nav-section-title">TEXT & DATA</div>
+        <button class="nav-item" data-view="case-converter">
+          <i data-lucide="type"></i>
+          <span>Case Converter & Stats</span>
+        </button>
+        <button class="nav-item" data-view="json-formatter">
+          <i data-lucide="code-2"></i>
+          <span>JSON Studio</span>
+        </button>
+        <button class="nav-item" data-view="encoder-hash">
+          <i data-lucide="lock"></i>
+          <span>Base64 & Hash Studio</span>
+        </button>
+        <button class="nav-item" data-view="unit-converter">
+          <i data-lucide="scale"></i>
+          <span>Unit Converter</span>
+        </button>
+
+        <!-- Security & Productivity -->
+        <div class="nav-section-title">SECURITY & CODING</div>
+        <button class="nav-item" data-view="password-gen">
+          <i data-lucide="key-round"></i>
+          <span>Password Generator</span>
+        </button>
+        <button class="nav-item" data-view="diff-checker">
+          <i data-lucide="git-compare"></i>
+          <span>Text & Code Diff</span>
+        </button>
+        <button class="nav-item" data-view="time-calc">
+          <i data-lucide="clock"></i>
+          <span>Timestamp & Date Calc</span>
+        </button>
+        <button class="nav-item" data-view="markdown-scratchpad">
+          <i data-lucide="notebook-pen"></i>
+          <span>Quick Notes / Scratchpad</span>
+        </button>
+        <button class="nav-item" data-view="regex-tester">
+          <i data-lucide="binary"></i>
+          <span>Regex Tester</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="privacy-shield">
+          <div class="shield-icon"><i data-lucide="shield-check"></i></div>
+          <div class="shield-text">
+            <strong>100% Client-Side</strong>
+            <span>Files never leave your device</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Navigation">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="current-view-title" id="currentViewBreadcrumb">
+            <span class="category-tag">OVERVIEW</span>
+            <h1 class="view-heading">All Utilities Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-secondary quick-search-btn" id="headerSearchBtn">
+            <i data-lucide="search"></i>
+            <span>Quick Find</span>
+            <kbd class="shortcut-tag">Ctrl K</kbd>
+          </button>
+
+          <button class="icon-btn theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+            <i data-lucide="sun" class="sun-icon"></i>
+            <i data-lucide="moon" class="moon-icon"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Views Container -->
+      <div class="content-scrollable">
+        
+        <!-- DASHBOARD VIEW -->
+        <section class="tool-view active" id="view-dashboard">
+          <div class="dashboard-hero">
+            <div class="hero-badge">
+              <i data-lucide="zap"></i> Offline-Capable & Privacy-First
+            </div>
+            <h2>Your Daily Digital Swiss-Army Knife</h2>
+            <p>High-performance client-side tools for documents, images, QR codes, and daily data tasks. Fast, private, and zero limits.</p>
+            
+            <div class="hero-stats">
+              <div class="stat-pill"><i data-lucide="file-check"></i> 19+ Built-in Tools</div>
+              <div class="stat-pill"><i data-lucide="shield"></i> Zero Server Uploads</div>
+              <div class="stat-pill"><i data-lucide="gauge"></i> Instant WASM/Canvas Processing</div>
+            </div>
+          </div>
+
+          <!-- Quick Filters -->
+          <div class="category-filters">
+            <button class="filter-btn active" data-filter="all">All Tools</button>
+            <button class="filter-btn" data-filter="pdf">Documents & PDF</button>
+            <button class="filter-btn" data-filter="image">Media & Image</button>
+            <button class="filter-btn" data-filter="qr">QR Code Studio</button>
+            <button class="filter-btn" data-filter="text">Text & Data</button>
+            <button class="filter-btn" data-filter="security">Security & Dev</button>
+          </div>
+
+          <!-- Cards Grid -->
+          <div class="tools-grid" id="toolsGrid">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </section>
+
+        <!-- FAVORITES VIEW -->
+        <section class="tool-view" id="view-favorites">
+          <div class="view-header-bar">
+            <h2>Your Starred Tools</h2>
+            <p>Quick access to your most frequently used daily utilities.</p>
+          </div>
+          <div class="tools-grid" id="favoritesGrid">
+            <div class="empty-state">
+              <i data-lucide="star-off"></i>
+              <h3>No favorite tools yet</h3>
+              <p>Click the star icon on any tool card to pin it here for instant access.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== PDF TOOLS ==================== -->
+        
+        <!-- PDF TO WORD -->
+        <section class="tool-view" id="view-pdf-to-word">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>PDF to Word (.docx)</h2>
+                <p>Extract text formatting, headings, and paragraphs from your PDF and export directly into Microsoft Word format.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="pdf-to-word"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="pdfToWordDropzone">
+                <input type="file" id="pdfToWordInput" accept="application/pdf" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="file-up"></i></div>
+                  <h3>Drop your PDF file here</h3>
+                  <p>or click to browse files from your computer</p>
+                  <span class="file-spec">Supports .pdf files up to 100MB</span>
+                </div>
+              </div>
+
+              <div class="file-active-card hidden" id="pdfToWordActiveCard">
+                <div class="file-info-row">
+                  <div class="file-icon"><i data-lucide="file-text"></i></div>
+                  <div class="file-details">
+                    <span class="filename" id="pdfToWordFileName">document.pdf</span>
+                    <span class="filesize" id="pdfToWordFileSize">2.4 MB</span>
+                  </div>
+                  <button class="icon-btn remove-file-btn" id="pdfToWordRemoveBtn"><i data-lucide="trash-2"></i></button>
+                </div>
+
+                <div class="conversion-options">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="pdfToWordKeepStructure" checked>
+                    <span>Preserve paragraphs & heading layout structure</span>
+                  </label>
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="pdfToWordConvertBtn">
+                    <i data-lucide="download"></i> Convert & Download .docx
+                  </button>
+                </div>
+
+                <div class="preview-box hidden" id="pdfToWordPreviewBox">
+                  <h4>Extracted Document Preview:</h4>
+                  <div class="extracted-text-preview" id="pdfToWordTextPreview"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MERGE PDF -->
+        <section class="tool-view" id="view-pdf-merge">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>Merge Multiple PDFs</h2>
+                <p>Combine multiple PDF documents into a single organized file with custom order.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="pdf-merge"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="pdfMergeDropzone">
+                <input type="file" id="pdfMergeInput" accept="application/pdf" multiple hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="files"></i></div>
+                  <h3>Drop 2 or more PDF files here</h3>
+                  <p>or click to select files (you can select multiple at once)</p>
+                </div>
+              </div>
+
+              <div class="merge-file-list-wrapper hidden" id="pdfMergeListWrapper">
+                <div class="list-header">
+                  <h4>Files to Merge (<span id="mergeCount">0</span>)</h4>
+                  <button class="btn btn-sm btn-secondary" id="addMorePdfsBtn">
+                    <i data-lucide="plus"></i> Add More PDFs
+                  </button>
+                </div>
+
+                <div class="reorderable-list" id="pdfMergeQueue">
+                  <!-- File item cards with move up/down and remove buttons -->
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="mergePdfsExecuteBtn">
+                    <i data-lucide="combine"></i> Merge & Download PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SPLIT PDF -->
+        <section class="tool-view" id="view-pdf-split">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>Split & Extract PDF Pages</h2>
+                <p>Extract specific page numbers, page ranges, or split each page into individual documents.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="pdf-split"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="pdfSplitDropzone">
+                <input type="file" id="pdfSplitInput" accept="application/pdf" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="scissors"></i></div>
+                  <h3>Drop PDF file to split</h3>
+                  <p>or click to browse files</p>
+                </div>
+              </div>
+
+              <div class="file-active-card hidden" id="pdfSplitActiveCard">
+                <div class="file-info-row">
+                  <div class="file-icon"><i data-lucide="file-text"></i></div>
+                  <div class="file-details">
+                    <span class="filename" id="pdfSplitFileName">document.pdf</span>
+                    <span class="filesize" id="pdfSplitPageCount">Total Pages: ...</span>
+                  </div>
+                  <button class="icon-btn remove-file-btn" id="pdfSplitRemoveBtn"><i data-lucide="trash-2"></i></button>
+                </div>
+
+                <div class="split-controls">
+                  <div class="form-group">
+                    <label>Page Range to Extract:</label>
+                    <input type="text" class="form-input" id="pdfSplitRangeInput" placeholder="e.g. 1-3, 5, 8-10">
+                    <span class="form-hint">Enter individual page numbers or ranges separated by commas.</span>
+                  </div>
+
+                  <div class="split-options-grid">
+                    <button class="btn btn-secondary split-mode-btn active" data-mode="range">Extract Range</button>
+                    <button class="btn btn-secondary split-mode-btn" data-mode="all-single">Split Every Page to ZIP</button>
+                  </div>
+                </div>
+
+                <!-- Page Thumbnail Grid -->
+                <div class="pdf-thumbnails-container" id="pdfSplitThumbnails">
+                  <!-- Visual page thumbnails with checkboxes -->
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="pdfSplitExecuteBtn">
+                    <i data-lucide="download"></i> Extract & Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- IMAGES TO PDF -->
+        <section class="tool-view" id="view-images-to-pdf">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>Images to PDF Converter</h2>
+                <p>Convert JPG, PNG, and WebP images into a single multi-page PDF with custom margins and orientation.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="images-to-pdf"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="imagesToPdfDropzone">
+                <input type="file" id="imagesToPdfInput" accept="image/png, image/jpeg, image/webp" multiple hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="images"></i></div>
+                  <h3>Drop images here (JPG, PNG, WebP)</h3>
+                  <p>or click to select multiple photos</p>
+                </div>
+              </div>
+
+              <div class="images-pdf-workspace hidden" id="imagesToPdfWorkspace">
+                <div class="workspace-settings-bar">
+                  <div class="setting-item">
+                    <label>Page Orientation:</label>
+                    <select id="imgPdfOrientation" class="form-select">
+                      <option value="auto">Auto (Match Image)</option>
+                      <option value="portrait">Portrait</option>
+                      <option value="landscape">Landscape</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label>Page Margin:</label>
+                    <select id="imgPdfMargin" class="form-select">
+                      <option value="0">No Margin (Full Bleed)</option>
+                      <option value="20" selected>Small Margin (20px)</option>
+                      <option value="40">Big Margin (40px)</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-sm btn-secondary" id="addMoreImagesBtn">
+                    <i data-lucide="plus"></i> Add More Photos
+                  </button>
+                </div>
+
+                <div class="image-order-grid" id="imagesToPdfGrid">
+                  <!-- Reorderable image cards -->
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="generateImagesPdfBtn">
+                    <i data-lucide="file-check"></i> Generate & Download PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PDF TO IMAGES -->
+        <section class="tool-view" id="view-pdf-to-images">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>PDF to Images (PNG / JPG)</h2>
+                <p>Convert every page of your PDF into crisp, high-resolution standalone images with one-click ZIP download.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="pdf-to-images"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="pdfToImgDropzone">
+                <input type="file" id="pdfToImgInput" accept="application/pdf" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="image-down"></i></div>
+                  <h3>Drop PDF to extract images</h3>
+                  <p>or click to browse files</p>
+                </div>
+              </div>
+
+              <div class="file-active-card hidden" id="pdfToImgActiveCard">
+                <div class="file-info-row">
+                  <div class="file-icon"><i data-lucide="file-text"></i></div>
+                  <div class="file-details">
+                    <span class="filename" id="pdfToImgFileName">document.pdf</span>
+                    <span class="filesize" id="pdfToImgPageCount">Pages: ...</span>
+                  </div>
+                  <button class="icon-btn remove-file-btn" id="pdfToImgRemoveBtn"><i data-lucide="trash-2"></i></button>
+                </div>
+
+                <div class="conversion-settings-row">
+                  <div class="setting-item">
+                    <label>Output Image Format:</label>
+                    <select id="pdfToImgFormat" class="form-select">
+                      <option value="image/png">PNG (Lossless & Sharp)</option>
+                      <option value="image/jpeg">JPG (Smaller size)</option>
+                      <option value="image/webp">WebP (Modern high-compression)</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label>Resolution Scale:</label>
+                    <select id="pdfToImgScale" class="form-select">
+                      <option value="1.5">Standard (150 DPI)</option>
+                      <option value="2.0" selected>High Quality (200 DPI)</option>
+                      <option value="3.0">Ultra Crisp (300 DPI)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="pdfToImgConvertBtn">
+                    <i data-lucide="archive"></i> Convert & Download All as ZIP
+                  </button>
+                </div>
+
+                <!-- Page renders preview -->
+                <div class="rendered-pages-grid" id="pdfToImgPreviewGrid"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PDF SIGNER & ANNOTATOR -->
+        <section class="tool-view" id="view-pdf-signer">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge pdf-badge">PDF Tool</span>
+                <h2>Sign & Annotate PDF</h2>
+                <p>Draw your digital signature or upload an image to place directly onto any PDF page without external accounts.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="pdf-signer"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="pdfSignDropzone">
+                <input type="file" id="pdfSignInput" accept="application/pdf" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="signature"></i></div>
+                  <h3>Drop PDF to sign</h3>
+                  <p>or click to select document</p>
+                </div>
+              </div>
+
+              <div class="signer-workspace hidden" id="pdfSignWorkspace">
+                
+                <!-- Signer Toolbar -->
+                <div class="signer-toolbar">
+                  <div class="toolbar-group">
+                    <button class="btn btn-sm btn-secondary" id="openSignatureModalBtn">
+                      <i data-lucide="pen-tool"></i> Create Signature
+                    </button>
+                    <button class="btn btn-sm btn-secondary" id="addTextAnnotationBtn">
+                      <i data-lucide="type"></i> Add Text / Date
+                    </button>
+                  </div>
+
+                  <div class="toolbar-group">
+                    <button class="icon-btn" id="prevPageSignBtn" title="Previous Page"><i data-lucide="chevron-left"></i></button>
+                    <span class="page-indicator">Page <span id="currentSignPageNum">1</span> / <span id="totalSignPages">1</span></span>
+                    <button class="icon-btn" id="nextPageSignBtn" title="Next Page"><i data-lucide="chevron-right"></i></button>
+                  </div>
+
+                  <div class="toolbar-group">
+                    <button class="btn btn-primary btn-sm" id="exportSignedPdfBtn">
+                      <i data-lucide="download"></i> Download Signed PDF
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Canvas Viewer & Overlay -->
+                <div class="pdf-viewer-canvas-wrapper" id="pdfSignCanvasWrapper">
+                  <canvas id="pdfSignCanvas"></canvas>
+                  <div class="annotations-overlay" id="annotationsOverlay"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== MEDIA & IMAGE TOOLS ==================== -->
+
+        <!-- IMAGE COMPRESSOR -->
+        <section class="tool-view" id="view-image-compress">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge image-badge">Image Tool</span>
+                <h2>Smart Image Compressor & Resizer</h2>
+                <p>Shrink image file sizes by up to 90% with live quality comparison and custom dimension scaling.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="image-compress"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="imgCompressDropzone">
+                <input type="file" id="imgCompressInput" accept="image/*" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="minimize-2"></i></div>
+                  <h3>Drop image here (JPG, PNG, WebP)</h3>
+                  <p>or click to select photo</p>
+                </div>
+              </div>
+
+              <div class="compressor-workspace hidden" id="imgCompressWorkspace">
+                
+                <!-- Controls Panel -->
+                <div class="compress-controls-card">
+                  <div class="control-col">
+                    <div class="slider-header">
+                      <label for="compressQualitySlider">Compression Quality:</label>
+                      <span class="slider-val" id="compressQualityVal">80%</span>
+                    </div>
+                    <input type="range" id="compressQualitySlider" min="5" max="100" value="80" class="form-range">
+                  </div>
+
+                  <div class="control-col">
+                    <label>Resize Max Width (px):</label>
+                    <input type="number" id="compressMaxWidthInput" class="form-input" placeholder="Original Width">
+                  </div>
+
+                  <div class="control-col">
+                    <label>Format Output:</label>
+                    <select id="compressOutputFormat" class="form-select">
+                      <option value="image/webp">WebP (Highest savings)</option>
+                      <option value="image/jpeg" selected>JPEG</option>
+                      <option value="image/png">PNG</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Savings Comparison Banner -->
+                <div class="savings-banner" id="compressSavingsBanner">
+                  <div class="savings-item">
+                    <span class="label">Original Size:</span>
+                    <span class="val" id="origSizeDisplay">-- KB</span>
+                  </div>
+                  <div class="savings-arrow"><i data-lucide="arrow-right"></i></div>
+                  <div class="savings-item">
+                    <span class="label">Optimized Size:</span>
+                    <span class="val highlight" id="newSizeDisplay">-- KB</span>
+                  </div>
+                  <div class="savings-badge" id="savingsPctBadge">-0% Saved</div>
+                </div>
+
+                <!-- Comparison Split View -->
+                <div class="comparison-container">
+                  <div class="comp-pane">
+                    <span class="pane-label">Original Image</span>
+                    <img id="origImgPreview" alt="Original Preview">
+                  </div>
+                  <div class="comp-pane">
+                    <span class="pane-label">Compressed Preview</span>
+                    <img id="compressedImgPreview" alt="Compressed Preview">
+                  </div>
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="downloadCompressedBtn">
+                    <i data-lucide="download"></i> Download Optimized Image
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- IMAGE FORMAT CONVERTER -->
+        <section class="tool-view" id="view-image-convert">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge image-badge">Image Tool</span>
+                <h2>Universal Image Converter</h2>
+                <p>Convert images between PNG, JPG, WebP, BMP, and SVG formats instantly in your browser.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="image-convert"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="imgConvertDropzone">
+                <input type="file" id="imgConvertInput" accept="image/*" multiple hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="refresh-cw"></i></div>
+                  <h3>Drop images to convert (Batch supported)</h3>
+                  <p>or click to browse files</p>
+                </div>
+              </div>
+
+              <div class="batch-convert-workspace hidden" id="imgConvertWorkspace">
+                <div class="convert-settings-bar">
+                  <div class="setting-item">
+                    <label>Target Format:</label>
+                    <select id="targetImageFormat" class="form-select">
+                      <option value="image/png">PNG (.png)</option>
+                      <option value="image/jpeg">JPG / JPEG (.jpg)</option>
+                      <option value="image/webp" selected>WebP (.webp)</option>
+                      <option value="image/bmp">Bitmap (.bmp)</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-primary" id="executeBatchConvertBtn">
+                    <i data-lucide="download"></i> Convert & Download (<span id="convertCountBadge">0</span>)
+                  </button>
+                </div>
+
+                <div class="batch-preview-grid" id="batchConvertGrid"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DOCUMENT SCAN FILTER -->
+        <section class="tool-view" id="view-doc-scanner">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge image-badge">Image Tool</span>
+                <h2>Document Photo Scan Enhancer</h2>
+                <p>Turn smartphone photos of receipts and paper into crisp, high-contrast, black-and-white scanned documents.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="doc-scanner"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="docScanDropzone">
+                <input type="file" id="docScanInput" accept="image/*" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="scan-line"></i></div>
+                  <h3>Drop document photo / receipt</h3>
+                  <p>or click to browse</p>
+                </div>
+              </div>
+
+              <div class="scanner-workspace hidden" id="docScanWorkspace">
+                <div class="scan-controls-card">
+                  <div class="filter-preset-buttons">
+                    <button class="btn btn-sm btn-secondary scan-preset-btn active" data-preset="bw">Sharp B&W Scan</button>
+                    <button class="btn btn-sm btn-secondary scan-preset-btn" data-preset="grayscale">Clean Grayscale</button>
+                    <button class="btn btn-sm btn-secondary scan-preset-btn" data-preset="high-contrast">High Contrast Color</button>
+                    <button class="btn btn-sm btn-secondary scan-preset-btn" data-preset="magic">Document Magic</button>
+                  </div>
+
+                  <div class="scanner-sliders">
+                    <div class="control-col">
+                      <label>Threshold / Brightness:</label>
+                      <input type="range" id="scanThresholdSlider" min="50" max="220" value="140" class="form-range">
+                    </div>
+                    <div class="control-col">
+                      <label>Contrast Enhancement:</label>
+                      <input type="range" id="scanContrastSlider" min="1" max="4" step="0.2" value="1.8" class="form-range">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="comparison-container">
+                  <div class="comp-pane">
+                    <span class="pane-label">Original Photo</span>
+                    <img id="origScanPhoto" alt="Original Photo">
+                  </div>
+                  <div class="comp-pane">
+                    <span class="pane-label">Scanned Document Result</span>
+                    <canvas id="scanResultCanvas"></canvas>
+                  </div>
+                </div>
+
+                <div class="action-row">
+                  <button class="btn btn-primary" id="downloadScannedDocBtn">
+                    <i data-lucide="download"></i> Download Scanned Image
+                  </button>
+                  <button class="btn btn-secondary" id="saveScanAsPdfBtn">
+                    <i data-lucide="file-plus"></i> Save directly as PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- COLOR PALETTE PICKER -->
+        <section class="tool-view" id="view-color-palette">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge image-badge">Image Tool</span>
+                <h2>Color & Palette Picker</h2>
+                <p>Extract dominant color swatches, hex codes, RGB values, and CSS variables directly from any image.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="color-palette"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="dropzone" id="paletteDropzone">
+                <input type="file" id="paletteInput" accept="image/*" hidden>
+                <div class="dropzone-content">
+                  <div class="drop-icon"><i data-lucide="pipette"></i></div>
+                  <h3>Drop image to extract palette</h3>
+                  <p>or click to browse files</p>
+                </div>
+              </div>
+
+              <div class="palette-workspace hidden" id="paletteWorkspace">
+                <div class="palette-image-container">
+                  <img id="paletteSourceImg" alt="Palette Source">
+                </div>
+
+                <div class="extracted-swatches-card">
+                  <h4>Dominant Palette Swatches:</h4>
+                  <div class="swatches-row" id="swatchesContainer"></div>
+                </div>
+
+                <div class="css-tokens-card">
+                  <div class="card-header-bar">
+                    <h4>Export CSS Variables</h4>
+                    <button class="btn btn-sm btn-secondary" id="copyCssTokensBtn">
+                      <i data-lucide="copy"></i> Copy CSS
+                    </button>
+                  </div>
+                  <pre class="code-block" id="cssTokensDisplay"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== QR STUDIO ==================== -->
+
+        <!-- QR CODE GENERATOR -->
+        <section class="tool-view" id="view-qr-generator">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge qr-badge">QR Studio</span>
+                <h2>Custom QR Code Generator</h2>
+                <p>Create styled, high-resolution QR codes for websites, Wi-Fi networks, vCards, emails, and SMS.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="qr-generator"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body qr-studio-layout">
+              
+              <!-- QR Form Inputs -->
+              <div class="qr-form-panel">
+                <div class="qr-type-tabs">
+                  <button class="qr-type-btn active" data-type="url"><i data-lucide="globe"></i> URL</button>
+                  <button class="qr-type-btn" data-type="text"><i data-lucide="align-left"></i> Text</button>
+                  <button class="qr-type-btn" data-type="wifi"><i data-lucide="wifi"></i> Wi-Fi</button>
+                  <button class="qr-type-btn" data-type="vcard"><i data-lucide="contact"></i> vCard</button>
+                  <button class="qr-type-btn" data-type="email"><i data-lucide="mail"></i> Email</button>
+                </div>
+
+                <!-- URL Type -->
+                <div class="qr-type-form active" id="qrForm-url">
+                  <div class="form-group">
+                    <label>Website URL:</label>
+                    <input type="url" class="form-input" id="qrUrlInput" placeholder="https://example.com" value="https://google.com">
+                  </div>
+                </div>
+
+                <!-- Text Type -->
+                <div class="qr-type-form" id="qrForm-text">
+                  <div class="form-group">
+                    <label>Plain Text Content:</label>
+                    <textarea class="form-input" id="qrTextInput" rows="3" placeholder="Enter message or notes..."></textarea>
+                  </div>
+                </div>
+
+                <!-- Wi-Fi Type -->
+                <div class="qr-type-form" id="qrForm-wifi">
+                  <div class="form-group">
+                    <label>Network Name (SSID):</label>
+                    <input type="text" class="form-input" id="qrWifiSsid" placeholder="Home_WiFi_5G">
+                  </div>
+                  <div class="form-group">
+                    <label>Password:</label>
+                    <input type="text" class="form-input" id="qrWifiPassword" placeholder="Network password">
+                  </div>
+                  <div class="form-group">
+                    <label>Encryption Type:</label>
+                    <select id="qrWifiEncryption" class="form-select">
+                      <option value="WPA">WPA / WPA2 / WPA3</option>
+                      <option value="WEP">WEP</option>
+                      <option value="nopass">None (Open Network)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- vCard Contact -->
+                <div class="qr-type-form" id="qrForm-vcard">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>First Name:</label>
+                      <input type="text" class="form-input" id="qrVcardFirst" placeholder="John">
+                    </div>
+                    <div class="form-group">
+                      <label>Last Name:</label>
+                      <input type="text" class="form-input" id="qrVcardLast" placeholder="Doe">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Phone Number:</label>
+                    <input type="tel" class="form-input" id="qrVcardPhone" placeholder="+1 (555) 000-0000">
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" class="form-input" id="qrVcardEmail" placeholder="john@example.com">
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="qr-type-form" id="qrForm-email">
+                  <div class="form-group">
+                    <label>Recipient Email:</label>
+                    <input type="email" class="form-input" id="qrEmailTo" placeholder="recipient@example.com">
+                  </div>
+                  <div class="form-group">
+                    <label>Subject:</label>
+                    <input type="text" class="form-input" id="qrEmailSubject" placeholder="Hello there">
+                  </div>
+                  <div class="form-group">
+                    <label>Message Body:</label>
+                    <textarea class="form-input" id="qrEmailBody" rows="2" placeholder="Email message..."></textarea>
+                  </div>
+                </div>
+
+                <!-- QR Styling Options -->
+                <div class="qr-style-accordion">
+                  <div class="accordion-header">
+                    <h4><i data-lucide="palette"></i> Style & Color Customization</h4>
+                  </div>
+                  <div class="accordion-content">
+                    <div class="style-row">
+                      <div class="form-group">
+                        <label>Foreground Color:</label>
+                        <div class="color-picker-row">
+                          <input type="color" id="qrFgColor" value="#000000">
+                          <span class="color-hex-label" id="qrFgColorHex">#000000</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Background Color:</label>
+                        <div class="color-picker-row">
+                          <input type="color" id="qrBgColor" value="#ffffff">
+                          <span class="color-hex-label" id="qrBgColorHex">#ffffff</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>QR Error Correction Level:</label>
+                      <select id="qrEccLevel" class="form-select">
+                        <option value="L">L - Low (~7% recovery)</option>
+                        <option value="M" selected>M - Medium (~15% recovery)</option>
+                        <option value="Q">Q - High (~25% recovery)</option>
+                        <option value="H">H - Ultra High (~30% recovery)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- QR Output Card -->
+              <div class="qr-preview-panel">
+                <div class="qr-canvas-card">
+                  <div class="qr-display-box" id="qrDisplayBox">
+                    <canvas id="qrCanvas"></canvas>
+                  </div>
+                  <span class="qr-preview-hint">Live rendered preview</span>
+                </div>
+
+                <div class="qr-download-actions">
+                  <button class="btn btn-primary" id="downloadQrPngBtn">
+                    <i data-lucide="download"></i> Download PNG
+                  </button>
+                  <button class="btn btn-secondary" id="downloadQrSvgBtn">
+                    <i data-lucide="code"></i> Download SVG
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- QR CODE SCANNER -->
+        <section class="tool-view" id="view-qr-scanner">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge qr-badge">QR Studio</span>
+                <h2>QR Code Scanner & Decoder</h2>
+                <p>Scan and decode QR codes instantly from an uploaded screenshot/image or your live webcam.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="qr-scanner"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="scanner-tabs">
+                <button class="scanner-tab-btn active" data-tab="upload"><i data-lucide="image"></i> Upload Image / Screenshot</button>
+                <button class="scanner-tab-btn" data-tab="camera"><i data-lucide="camera"></i> Live Camera Scan</button>
+              </div>
+
+              <!-- Upload Tab -->
+              <div class="scanner-tab-view active" id="qrScannerUploadView">
+                <div class="dropzone" id="qrScanDropzone">
+                  <input type="file" id="qrScanFileInput" accept="image/*" hidden>
+                  <div class="dropzone-content">
+                    <div class="drop-icon"><i data-lucide="scan"></i></div>
+                    <h3>Drop QR code image here</h3>
+                    <p>or click to browse or paste from clipboard (Ctrl+V)</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Camera Tab -->
+              <div class="scanner-tab-view" id="qrScannerCameraView">
+                <div class="camera-stream-wrapper">
+                  <video id="qrCameraVideo" playsinline></video>
+                  <div class="scan-target-box">
+                    <div class="scan-laser-line"></div>
+                  </div>
+                </div>
+                <div class="camera-controls">
+                  <button class="btn btn-secondary" id="startQrCameraBtn"><i data-lucide="video"></i> Start Camera</button>
+                  <button class="btn btn-secondary hidden" id="stopQrCameraBtn"><i data-lucide="video-off"></i> Stop Camera</button>
+                </div>
+              </div>
+
+              <!-- Scan Results Card -->
+              <div class="scan-result-card hidden" id="qrScanResultCard">
+                <div class="result-header">
+                  <h4><i data-lucide="check-circle"></i> Decoded QR Payload:</h4>
+                  <span class="badge result-type-badge" id="qrResultTypeBadge">TEXT</span>
+                </div>
+                <div class="result-content-box" id="qrDecodedContent"></div>
+                <div class="result-action-buttons">
+                  <button class="btn btn-sm btn-secondary" id="copyQrResultBtn"><i data-lucide="copy"></i> Copy Content</button>
+                  <a href="#" class="btn btn-sm btn-primary hidden" id="openQrUrlBtn" target="_blank" rel="noopener"><i data-lucide="external-link"></i> Open Link</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TEXT & DATA UTILITIES ==================== -->
+
+        <!-- CASE CONVERTER & STATS -->
+        <section class="tool-view" id="view-case-converter">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Text Utility</span>
+                <h2>Smart Case Converter & Text Inspector</h2>
+                <p>Transform string cases, clean up formatting, and calculate real-time word/character/reading statistics.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="case-converter"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <!-- Live Stats Bar -->
+              <div class="text-stats-bar">
+                <div class="text-stat-item">
+                  <span class="stat-num" id="statWords">0</span>
+                  <span class="stat-label">Words</span>
+                </div>
+                <div class="text-stat-item">
+                  <span class="stat-num" id="statChars">0</span>
+                  <span class="stat-label">Characters</span>
+                </div>
+                <div class="text-stat-item">
+                  <span class="stat-num" id="statCharsNoSpace">0</span>
+                  <span class="stat-label">No Spaces</span>
+                </div>
+                <div class="text-stat-item">
+                  <span class="stat-num" id="statLines">0</span>
+                  <span class="stat-label">Lines</span>
+                </div>
+                <div class="text-stat-item">
+                  <span class="stat-num" id="statReadingTime">0 min</span>
+                  <span class="stat-label">Reading Time</span>
+                </div>
+              </div>
+
+              <!-- Text Input Area -->
+              <div class="form-group">
+                <div class="textarea-header-actions">
+                  <label for="caseInputText">Your Text:</label>
+                  <div class="action-buttons-group">
+                    <button class="btn btn-xs btn-secondary" id="clearCaseTextBtn"><i data-lucide="trash"></i> Clear</button>
+                    <button class="btn btn-xs btn-secondary" id="copyCaseTextBtn"><i data-lucide="copy"></i> Copy</button>
+                  </div>
+                </div>
+                <textarea id="caseInputText" class="form-input code-font" rows="8" placeholder="Type or paste your text here to transform cases or analyze metrics..."></textarea>
+              </div>
+
+              <!-- Transformation Buttons -->
+              <div class="case-buttons-grid">
+                <button class="btn btn-secondary case-action-btn" data-case="upper">UPPERCASE</button>
+                <button class="btn btn-secondary case-action-btn" data-case="lower">lowercase</button>
+                <button class="btn btn-secondary case-action-btn" data-case="title">Title Case</button>
+                <button class="btn btn-secondary case-action-btn" data-case="sentence">Sentence case</button>
+                <button class="btn btn-secondary case-action-btn" data-case="camel">camelCase</button>
+                <button class="btn btn-secondary case-action-btn" data-case="pascal">PascalCase</button>
+                <button class="btn btn-secondary case-action-btn" data-case="snake">snake_case</button>
+                <button class="btn btn-secondary case-action-btn" data-case="kebab">kebab-case</button>
+                <button class="btn btn-secondary case-action-btn" data-case="trim">Trim Extra Spaces</button>
+                <button class="btn btn-secondary case-action-btn" data-case="reverse">Reverse Text</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- JSON STUDIO -->
+        <section class="tool-view" id="view-json-formatter">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Text Utility</span>
+                <h2>JSON Formatter & Studio</h2>
+                <p>Format, validate, beautify, minify, and inspect JSON payloads with real-time error indicators.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="json-formatter"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="json-toolbar">
+                <div class="toolbar-left">
+                  <button class="btn btn-sm btn-primary" id="beautifyJsonBtn"><i data-lucide="sparkles"></i> Beautify (2 Spaces)</button>
+                  <button class="btn btn-sm btn-secondary" id="minifyJsonBtn"><i data-lucide="minimize"></i> Minify</button>
+                  <button class="btn btn-sm btn-secondary" id="repairJsonBtn"><i data-lucide="wrench"></i> Fix & Parse</button>
+                </div>
+                <div class="toolbar-right">
+                  <button class="btn btn-sm btn-secondary" id="loadSampleJsonBtn"><i data-lucide="file-code"></i> Load Sample</button>
+                  <button class="btn btn-sm btn-secondary" id="copyJsonBtn"><i data-lucide="copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-secondary" id="clearJsonBtn"><i data-lucide="trash"></i> Clear</button>
+                </div>
+              </div>
+
+              <!-- Error Banner -->
+              <div class="json-status-banner valid" id="jsonStatusBanner">
+                <i data-lucide="check-circle"></i>
+                <span id="jsonStatusText">Valid JSON structure</span>
+              </div>
+
+              <div class="form-group">
+                <textarea id="jsonEditor" class="form-input code-font" rows="14" placeholder='{"name": "OmniTools", "ready": true}'></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BASE64 & HASH STUDIO -->
+        <section class="tool-view" id="view-encoder-hash">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Security & Data</span>
+                <h2>Base64, URL & Hash Studio</h2>
+                <p>Encode/Decode Base64 and URLs, and calculate cryptographic SHA-256 / SHA-512 hashes instantly.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="encoder-hash"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="encoder-grid">
+                
+                <!-- Input Box -->
+                <div class="encoder-col">
+                  <div class="textarea-header-actions">
+                    <label>Input String:</label>
+                    <button class="btn btn-xs btn-secondary" id="clearEncoderInputBtn">Clear</button>
+                  </div>
+                  <textarea id="encoderInputText" class="form-input code-font" rows="6" placeholder="Enter string to encode, decode, or hash..."></textarea>
+                  
+                  <div class="encoder-quick-actions">
+                    <button class="btn btn-sm btn-secondary" id="encodeBase64Btn">Base64 Encode</button>
+                    <button class="btn btn-sm btn-secondary" id="decodeBase64Btn">Base64 Decode</button>
+                    <button class="btn btn-sm btn-secondary" id="encodeUrlBtn">URL Encode</button>
+                    <button class="btn btn-sm btn-secondary" id="decodeUrlBtn">URL Decode</button>
+                  </div>
+                </div>
+
+                <!-- Output Box -->
+                <div class="encoder-col">
+                  <div class="textarea-header-actions">
+                    <label>Output Result:</label>
+                    <button class="btn btn-xs btn-secondary" id="copyEncoderOutputBtn"><i data-lucide="copy"></i> Copy</button>
+                  </div>
+                  <textarea id="encoderOutputText" class="form-input code-font" rows="6" readonly placeholder="Output will appear here..."></textarea>
+                </div>
+              </div>
+
+              <!-- Hashes Card -->
+              <div class="hashes-container">
+                <h4><i data-lucide="hash"></i> Cryptographic Hashes (Real-Time)</h4>
+                
+                <div class="hash-row">
+                  <span class="hash-label">SHA-256:</span>
+                  <input type="text" id="hashSha256" class="form-input code-font" readonly>
+                  <button class="icon-btn copy-hash-btn" data-target="hashSha256"><i data-lucide="copy"></i></button>
+                </div>
+
+                <div class="hash-row">
+                  <span class="hash-label">SHA-512:</span>
+                  <input type="text" id="hashSha512" class="form-input code-font" readonly>
+                  <button class="icon-btn copy-hash-btn" data-target="hashSha512"><i data-lucide="copy"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- UNIT CONVERTER -->
+        <section class="tool-view" id="view-unit-converter">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Daily Utility</span>
+                <h2>Unit & Measurement Converter</h2>
+                <p>Convert across Length, Mass/Weight, Temperature, Digital Data Storage, Area, Time, and Speed.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="unit-converter"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="unit-category-tabs">
+                <button class="unit-tab-btn active" data-unit="length"><i data-lucide="ruler"></i> Length</button>
+                <button class="unit-tab-btn" data-unit="weight"><i data-lucide="scale"></i> Weight</button>
+                <button class="unit-tab-btn" data-unit="temperature"><i data-lucide="thermometer"></i> Temperature</button>
+                <button class="unit-tab-btn" data-unit="data"><i data-lucide="hard-drive"></i> Digital Data</button>
+                <button class="unit-tab-btn" data-unit="area"><i data-lucide="maximize-2"></i> Area</button>
+                <button class="unit-tab-btn" data-unit="time"><i data-lucide="clock"></i> Time</button>
+              </div>
+
+              <div class="converter-box-grid">
+                <!-- From -->
+                <div class="converter-box">
+                  <label>From:</label>
+                  <input type="number" id="unitFromValue" class="form-input large-input" value="1">
+                  <select id="unitFromSelect" class="form-select"></select>
+                </div>
+
+                <!-- Swap Button -->
+                <div class="converter-swap-col">
+                  <button class="icon-btn swap-btn" id="swapUnitsBtn" title="Swap Units">
+                    <i data-lucide="arrow-left-right"></i>
+                  </button>
+                </div>
+
+                <!-- To -->
+                <div class="converter-box">
+                  <label>To:</label>
+                  <input type="number" id="unitToValue" class="form-input large-input" readonly>
+                  <select id="unitToSelect" class="form-select"></select>
+                </div>
+              </div>
+
+              <!-- Quick Conversion Multi-table -->
+              <div class="multi-unit-table-card">
+                <h4>Quick Common Conversions</h4>
+                <div class="quick-table-grid" id="quickUnitTable"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECURITY & DEV TOOLS ==================== -->
+
+        <!-- PASSWORD GENERATOR -->
+        <section class="tool-view" id="view-password-gen">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Security Tool</span>
+                <h2>Password & Secret Generator</h2>
+                <p>Generate cryptographically secure passwords and memorable passphrases with entropy analysis.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="password-gen"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <!-- Mode Tabs -->
+              <div class="scanner-tabs">
+                <button class="scanner-tab-btn pw-mode-btn active" data-mode="random"><i data-lucide="key"></i> Random Characters</button>
+                <button class="scanner-tab-btn pw-mode-btn" data-mode="passphrase"><i data-lucide="align-left"></i> Memorable Passphrase</button>
+              </div>
+
+              <!-- Output Display Box -->
+              <div class="pw-display-card">
+                <input type="text" id="pwOutput" class="pw-input-large" readonly>
+                <button class="btn btn-secondary btn-sm" id="generatePwBtn"><i data-lucide="refresh-cw"></i> Regenerate</button>
+                <button class="btn btn-primary btn-sm" id="copyPwBtn"><i data-lucide="copy"></i> Copy</button>
+              </div>
+
+              <!-- Entropy Strength Meter -->
+              <div class="strength-meter-container">
+                <div class="strength-meter-header">
+                  <span>Strength: <strong id="pwStrengthLabel">Strong</strong></span>
+                  <span id="pwEntropyDisplay">72 bits of entropy</span>
+                </div>
+                <div class="strength-bar-track">
+                  <div class="strength-bar-fill" id="pwStrengthBar"></div>
+                </div>
+              </div>
+
+              <!-- Slider -->
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="pwLengthSlider">Length / Word Count:</label>
+                  <span class="slider-val" id="pwLengthVal">18 chars</span>
+                </div>
+                <input type="range" id="pwLengthSlider" min="8" max="64" value="18" class="form-range">
+              </div>
+
+              <!-- Random Character Options -->
+              <div class="pw-options-grid" id="pwRandomOptions">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="pwIncUpper" checked>
+                  <span>Include Uppercase (A-Z)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="pwIncLower" checked>
+                  <span>Include Lowercase (a-z)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="pwIncNumbers" checked>
+                  <span>Include Numbers (0-9)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="pwIncSymbols" checked>
+                  <span>Include Symbols (!@#$%)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="pwNoAmbiguous">
+                  <span>Avoid Ambiguous (0, O, 1, l, I)</span>
+                </label>
+              </div>
+
+              <!-- Passphrase Options -->
+              <div class="pw-options-grid hidden" id="pwPassphraseOptions">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Word Separator:</label>
+                  <select id="pwSeparatorSelect" class="form-select">
+                    <option value="-">Hyphen (-)</option>
+                    <option value=".">Dot (.)</option>
+                    <option value="_">Underscore (_)</option>
+                    <option value=" ">Space ( )</option>
+                  </select>
+                </div>
+                <label class="checkbox-label" style="align-self: flex-end;">
+                  <input type="checkbox" id="pwCapitalizeWords" checked>
+                  <span>Capitalize Each Word</span>
+                </label>
+                <label class="checkbox-label" style="align-self: flex-end;">
+                  <input type="checkbox" id="pwIncludeNumberInWord" checked>
+                  <span>Append Random Number</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TEXT & CODE DIFF -->
+        <section class="tool-view" id="view-diff-checker">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Developer Tool</span>
+                <h2>Text & Code Diff Checker</h2>
+                <p>Compare two text snippets or code blocks side-by-side with visual line-by-line diff highlights.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="diff-checker"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="diff-input-grid">
+                <div class="form-group">
+                  <label>Original Text (Before):</label>
+                  <textarea id="diffTextA" class="form-input code-font" rows="8" placeholder="Original code or text..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Modified Text (After):</label>
+                  <textarea id="diffTextB" class="form-input code-font" rows="8" placeholder="Modified code or text..."></textarea>
+                </div>
+              </div>
+
+              <div class="diff-toolbar">
+                <div class="toolbar-left">
+                  <button class="btn btn-primary btn-sm" id="compareDiffBtn"><i data-lucide="git-compare"></i> Compare Diff</button>
+                  <button class="btn btn-secondary btn-sm" id="swapDiffBtn"><i data-lucide="arrow-left-right"></i> Swap Panels</button>
+                  <button class="btn btn-secondary btn-sm" id="loadSampleDiffBtn"><i data-lucide="file-code"></i> Load Sample</button>
+                  <button class="btn btn-secondary btn-sm" id="clearDiffBtn"><i data-lucide="trash"></i> Clear</button>
+                </div>
+                <div class="diff-badges-group">
+                  <span class="diff-badge-pill added" id="diffAddedBadge">+0 additions</span>
+                  <span class="diff-badge-pill removed" id="diffRemovedBadge">-0 deletions</span>
+                </div>
+              </div>
+
+              <!-- Output View -->
+              <div class="diff-output-box" id="diffOutputContainer"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TIMESTAMP & DATE CALCULATOR -->
+        <section class="tool-view" id="view-time-calc">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Date & Time</span>
+                <h2>Unix Timestamp & Date Calculator</h2>
+                <p>Convert Epoch timestamps to human-readable dates and calculate duration between dates.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="time-calc"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <!-- Live Current Epoch -->
+              <div class="pw-display-card" style="margin-bottom: 24px;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Current Epoch:</div>
+                <input type="text" id="currentEpochDisplay" class="pw-input-large" readonly>
+                <button class="btn btn-secondary btn-sm" id="copyCurrentEpochBtn"><i data-lucide="copy"></i> Copy Epoch</button>
+              </div>
+
+              <div class="time-grid-cards">
+                <!-- Epoch to Human -->
+                <div class="time-card">
+                  <h4><i data-lucide="clock"></i> Epoch to Human Date</h4>
+                  <div class="form-group">
+                    <label>Timestamp:</label>
+                    <div style="display: flex; gap: 8px;">
+                      <input type="number" id="epochToDateInput" class="form-input code-font" placeholder="1700000000">
+                      <select id="epochUnitSelect" class="form-select" style="width: 110px;">
+                        <option value="s">Seconds</option>
+                        <option value="ms">Millisec</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button class="btn btn-sm btn-primary" id="convertEpochBtn">Convert Timestamp</button>
+
+                  <div class="time-result-list">
+                    <div class="time-res-row"><span class="label">UTC:</span><span class="val" id="epochUtcResult">--</span></div>
+                    <div class="time-res-row"><span class="label">Local:</span><span class="val" id="epochLocalResult">--</span></div>
+                    <div class="time-res-row"><span class="label">ISO 8601:</span><span class="val" id="epochIsoResult">--</span></div>
+                    <div class="time-res-row"><span class="label">Relative:</span><span class="val" id="epochRelativeResult" style="color: var(--primary);">--</span></div>
+                  </div>
+                </div>
+
+                <!-- Date to Epoch -->
+                <div class="time-card">
+                  <h4><i data-lucide="calendar"></i> Date to Timestamp</h4>
+                  <div class="form-group">
+                    <label>Select Date & Time:</label>
+                    <input type="datetime-local" id="dateToEpochInput" class="form-input">
+                  </div>
+                  <button class="btn btn-sm btn-primary" id="convertDateBtn">Get Timestamp</button>
+
+                  <div class="time-result-list">
+                    <div class="time-res-row"><span class="label">Epoch (s):</span><span class="val" id="dateToEpochSec">--</span></div>
+                    <div class="time-res-row"><span class="label">Epoch (ms):</span><span class="val" id="dateToEpochMs">--</span></div>
+                  </div>
+                </div>
+
+                <!-- Date Difference -->
+                <div class="time-card">
+                  <h4><i data-lucide="hourglass"></i> Date Duration Calculator</h4>
+                  <div class="form-group">
+                    <label>Start Date:</label>
+                    <input type="date" id="diffDateStart" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label>End Date:</label>
+                    <input type="date" id="diffDateEnd" class="form-input">
+                  </div>
+                  <button class="btn btn-sm btn-primary" id="calcDateDiffBtn">Calculate Difference</button>
+
+                  <div class="time-result-list">
+                    <div class="time-res-row"><span class="label">Total Days:</span><span class="val" id="dateDiffDays">--</span></div>
+                    <div class="time-res-row"><span class="label">Weeks:</span><span class="val" id="dateDiffWeeks">--</span></div>
+                    <div class="time-res-row"><span class="label">Hours:</span><span class="val" id="dateDiffHours">--</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MARKDOWN SCRATCHPAD -->
+        <section class="tool-view" id="view-markdown-scratchpad">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Daily Notes</span>
+                <h2>Markdown Scratchpad & Quick Notes</h2>
+                <p>Distraction-free auto-saving scratchpad with live markdown rendering and instant local export.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="markdown-scratchpad"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <div class="toolbar-left" style="margin-bottom: 14px; gap: 8px;">
+                <button class="btn btn-sm btn-secondary" id="copyScratchpadBtn"><i data-lucide="copy"></i> Copy Text</button>
+                <button class="btn btn-sm btn-secondary" id="downloadScratchpadBtn"><i data-lucide="download"></i> Download .md</button>
+                <button class="btn btn-sm btn-secondary" id="clearScratchpadBtn"><i data-lucide="trash"></i> Clear</button>
+                <span class="counter-badge" id="scratchpadWordCount" style="margin-left: auto;">0 words</span>
+              </div>
+
+              <div class="scratchpad-grid">
+                <div class="scratchpad-pane">
+                  <div class="scratchpad-pane-header">
+                    <span>MARKDOWN EDITOR</span>
+                    <span style="color: var(--success); font-size: 0.72rem;">● Auto-saved</span>
+                  </div>
+                  <textarea id="scratchpadEditor" class="scratchpad-editor-textarea" placeholder="Type your notes here in markdown..."></textarea>
+                </div>
+
+                <div class="scratchpad-pane">
+                  <div class="scratchpad-pane-header">
+                    <span>LIVE PREVIEW</span>
+                  </div>
+                  <div class="scratchpad-preview-box" id="scratchpadPreview"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- REGEX TESTER -->
+        <section class="tool-view" id="view-regex-tester">
+          <div class="tool-container">
+            <div class="tool-header">
+              <div class="tool-header-info">
+                <span class="tool-badge text-badge">Developer Tool</span>
+                <h2>Regular Expression Playground</h2>
+                <p>Test regular expressions against target strings with live match breakdown and presets.</p>
+              </div>
+              <button class="favorite-toggle-btn" data-tool="regex-tester"><i data-lucide="star"></i></button>
+            </div>
+
+            <div class="tool-body">
+              <!-- Preset Pills -->
+              <div class="regex-presets-bar">
+                <span style="font-size: 0.78rem; color: var(--text-muted); align-self: center; margin-right: 6px;">Presets:</span>
+                <button class="btn btn-secondary regex-preset-btn" data-preset="email">Email</button>
+                <button class="btn btn-secondary regex-preset-btn" data-preset="url">URL</button>
+                <button class="btn btn-secondary regex-preset-btn" data-preset="phone">Phone Number</button>
+                <button class="btn btn-secondary regex-preset-btn" data-preset="ipv4">IPv4 Address</button>
+              </div>
+
+              <!-- Pattern Input -->
+              <div class="form-group">
+                <label>Regular Expression Pattern:</label>
+                <div class="regex-pattern-row">
+                  <span style="font-weight: 700; color: var(--text-muted);">/</span>
+                  <input type="text" id="regexPatternInput" placeholder="[a-zA-Z0-9._%+-]+@...">
+                  <span style="font-weight: 700; color: var(--text-muted);">/</span>
+                  
+                  <div class="regex-flags-group">
+                    <label class="checkbox-label"><input type="checkbox" id="flagGlobal" checked><span>g</span></label>
+                    <label class="checkbox-label"><input type="checkbox" id="flagCase" checked><span>i</span></label>
+                    <label class="checkbox-label"><input type="checkbox" id="flagMultiline"><span>m</span></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Test String -->
+              <div class="form-group">
+                <label>Test Text:</label>
+                <textarea id="regexTestTextInput" class="form-input code-font" rows="5" placeholder="Enter string to test against regex pattern..."></textarea>
+              </div>
+
+              <!-- Results Card -->
+              <div class="regex-results-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <h4><i data-lucide="check-circle-2"></i> Match Results:</h4>
+                  <span class="diff-badge-pill added" id="regexMatchCount">0 matches</span>
+                </div>
+                <div id="regexResultsContainer"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Command Palette Modal (Ctrl+K) -->
+  <div class="modal-backdrop hidden" id="commandPaletteModal">
+    <div class="command-palette-card">
+      <div class="palette-search-bar">
+        <i data-lucide="search"></i>
+        <input type="text" id="paletteSearchInput" placeholder="Type a tool name or action (e.g. 'merge pdf', 'qr code', 'compress')..." autocomplete="off">
+        <kbd class="shortcut-tag">ESC</kbd>
+      </div>
+      <div class="palette-results-list" id="paletteResultsList">
+        <!-- Dynamically rendered tools -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Signature Pad Modal -->
+  <div class="modal-backdrop hidden" id="signatureModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Your Digital Signature</h3>
+        <button class="icon-btn" id="closeSignatureModalBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="signature-canvas-container">
+          <canvas id="signaturePadCanvas" width="500" height="200"></canvas>
+          <div class="sign-baseline">Sign Above This Line</div>
+        </div>
+        <div class="signature-tools-row">
+          <div class="color-options">
+            <span class="color-dot black active" data-color="#000000"></span>
+            <span class="color-dot blue" data-color="#002b80"></span>
+            <span class="color-dot darkred" data-color="#8b0000"></span>
+          </div>
+          <button class="btn btn-sm btn-secondary" id="clearSignaturePadBtn"><i data-lucide="eraser"></i> Clear Pad</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelSignatureBtn">Cancel</button>
+        <button class="btn btn-primary" id="applySignatureBtn"><i data-lucide="check"></i> Insert into PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/modules/pdf-tools.js"></script>
+  <script src="js/modules/image-tools.js"></script>
+  <script src="js/modules/qr-studio.js"></script>
+  <script src="js/modules/text-tools.js"></script>
+  <script src="js/modules/unit-converter.js"></script>
+  <script src="js/modules/extra-tools.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

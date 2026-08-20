@@ -74,5 +74,5 @@ No complicated build steps or npm installations needed!
 
 ---
 
-## 📄 License
+##  License
 MIT License. Free for personal and commercial use.
